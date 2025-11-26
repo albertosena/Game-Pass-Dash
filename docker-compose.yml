@@ -1,0 +1,26 @@
+version: "3.9"
+
+services:
+  api:
+    build: ./backend
+    container_name: gamepass-api
+    restart: unless-stopped
+    ports:
+      - "4000:4000"
+    environment:
+      - PORT=4000
+      - DEFAULT_MARKET=BR
+      - DEFAULT_LANGUAGE=pt-BR
+      - CACHE_TTL_MS=3600000
+      - CORS_ORIGIN=http://localhost:5173
+
+  web:
+    build: ./frontend
+    container_name: gamepass-web
+    restart: unless-stopped
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://localhost:4000
+    depends_on:
+      - api
